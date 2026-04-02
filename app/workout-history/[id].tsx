@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   setCircle: { width: 22, height: 22, borderRadius: 11, alignItems: 'center', justifyContent: 'center', marginRight: 10 },
   setNum: { fontSize: 10, fontWeight: '800' },
   setVal: { fontSize: 14, fontWeight: '700', textAlign: 'center' },
-  homeBtn: { marginHorizontal: 30, marginTop: 20, height: 60, borderRadius: 20, overflow: 'hidden' },
+  homeBtn: { width: 220, height: 50, borderRadius: 25, overflow: 'hidden', alignSelf: 'center', marginTop: 20 },
   homeBtnGradient: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   homeBtnText: { color: '#FFF', fontSize: 16, fontWeight: '900' }
 });

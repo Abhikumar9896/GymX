@@ -421,8 +421,10 @@ const styles = StyleSheet.create({
   rowTitle: { fontSize: 15, fontWeight: '700' },
   rowValue: { fontSize: 12, fontWeight: '600', marginTop: 1 },
   logoutBtn: { 
-    marginHorizontal: 24, marginTop: 40, height: 60, 
-    borderRadius: 20, borderWidth: 1, 
+    width: 160, height: 44, 
+    borderRadius: 22, borderWidth: 1, 
+    alignSelf: 'center',
+    marginTop: 40,
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
   },
   logoutTxt: { color: '#EF4444', fontSize: 16, fontWeight: '900', marginLeft: 10 },
@@ -446,7 +448,7 @@ const styles = StyleSheet.create({
     borderRadius: 18, height: 60, paddingHorizontal: 20, 
     fontSize: 16, fontWeight: '700', borderWidth: 1
   },
-  saveAction: { height: 64, borderRadius: 22, overflow: 'hidden', marginTop: 15 },
+  saveAction: { width: 220, height: 50, borderRadius: 25, overflow: 'hidden', alignSelf: 'center', marginTop: 15 },
   saveGrad: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   saveLabel: { color: '#FFF', fontSize: 18, fontWeight: '900' }
 });

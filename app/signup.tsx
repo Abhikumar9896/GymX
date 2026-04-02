@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Dimensions, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator, Image, StatusBar } from 'react-native';
-import { Colors } from '@/constants/theme';
 import { useGymXStore } from '@/store/useStore';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { FadeInDown, FadeInUp, SlideInRight } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeInUp, SlideInRight, FadeIn } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 import { useAppTheme } from '@/hooks/useAppTheme';
+import { BlurView } from 'expo-blur';
 
 import { API_ENDPOINTS } from '@/constants/api';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -41,7 +41,7 @@ export default function SignupScreen() {
       await axios.post(API_ENDPOINTS.SIGNUP, { name, email, password });
       setStep(2);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Email already exists or server error.');
+      setError(err.response?.data?.message || 'Email taken or server error.');
     } finally {
       setLoading(false);
     }
@@ -70,134 +70,133 @@ export default function SignupScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
-      <LinearGradient colors={isDark ? ['#0F172A', '#1E293B'] : [theme.background, theme.card]} style={StyleSheet.absoluteFill} />
-      {isDark && <View style={styles.neonGlow} />}
+    <View style={[styles.container, { backgroundColor: '#000' }]}>
+      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+      
+      {/* Immersive Auth Background */}
+      <Animated.Image 
+        entering={FadeIn.duration(1000)}
+        source={require('../assets/images/auth-bg.png')}
+        style={[styles.backgroundImage, { width, height }]}
+        resizeMode="cover"
+      />
+      <LinearGradient colors={['rgba(0,0,0,0.6)', 'rgba(0,0,0,0.95)']} style={StyleSheet.absoluteFill} />
 
       <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
             
-            <TouchableOpacity onPress={() => step === 1 ? router.back() : setStep(1)} style={styles.backBtn}>
-               <Ionicons name="chevron-back" size={24} color={theme.tint} />
-            </TouchableOpacity>
-
             <Animated.View entering={FadeInUp.delay(100)} style={styles.header}>
-               <Image source={require('@/assets/images/logo.png')} style={styles.logo} resizeMode="contain" />
-               <Text style={[styles.title, { color: theme.text }]}>{step === 1 ? 'Join GymX' : 'Verify Email'}</Text>
-               <Text style={[styles.subtitle, { color: theme.icon }]}>
-                 {step === 1 ? 'Start your fitness journey today' : `Verification code sent to ${email}`}
+               <TouchableOpacity onPress={() => step === 1 ? router.back() : setStep(1)} style={styles.backBtn}>
+                  <Ionicons name="arrow-back" size={24} color="#FFF" />
+               </TouchableOpacity>
+               <Text style={styles.title}>{step === 1 ? 'Join the Elite' : 'Verify Email'}</Text>
+
+               <Text style={styles.subtitle}>
+                  {step === 1 ? 'Create your GymX profile' : `Enter the 6-digit code sent to ${email}`}
                </Text>
             </Animated.View>
 
-            <Animated.View entering={FadeInDown.delay(200)} style={styles.form}>
-               {error ? (
-                 <View style={styles.errorBanner}>
-                    <Text style={styles.errorText}>{error}</Text>
-                 </View>
-               ) : null}
-
-               {step === 1 ? (
-                 <>
-                   <View style={styles.inputContainer}>
-                      <Text style={[styles.label, { color: theme.text }]}>Full Name</Text>
-                      <View style={[styles.inputWrapper, { backgroundColor: theme.card, borderColor: theme.border }]}>
-                         <Ionicons name="person-outline" size={20} color={theme.icon} />
-                         <TextInput
-                            style={[styles.input, { color: theme.text }]}
-                            placeholder="John Doe"
-                            placeholderTextColor={theme.icon}
-                            value={name}
-                            onChangeText={setName}
-                         />
-                      </View>
-                   </View>
-
-                   <View style={styles.inputContainer}>
-                      <Text style={[styles.label, { color: theme.text }]}>Email Address</Text>
-                      <View style={[styles.inputWrapper, { backgroundColor: theme.card, borderColor: theme.border }]}>
-                         <Ionicons name="mail-outline" size={20} color={theme.icon} />
-                         <TextInput
-                            style={[styles.input, { color: theme.text }]}
-                            placeholder="athlete@gymx.com"
-                            placeholderTextColor={theme.icon}
-                            value={email}
-                            onChangeText={setEmail}
-                            autoCapitalize="none"
-                            keyboardType="email-address"
-                         />
-                      </View>
-                   </View>
-
-                   <View style={styles.inputContainer}>
-                      <Text style={[styles.label, { color: theme.text }]}>Password</Text>
-                      <View style={[styles.inputWrapper, { backgroundColor: theme.card, borderColor: theme.border }]}>
-                         <Ionicons name="lock-closed-outline" size={20} color={theme.icon} />
-                         <TextInput
-                            style={[styles.input, { color: theme.text }]}
-                            placeholder="••••••••"
-                            placeholderTextColor={theme.icon}
-                            secureTextEntry
-                            value={password}
-                            onChangeText={setPassword}
-                         />
-                      </View>
-                   </View>
-
-                   <TouchableOpacity style={styles.signupBtn} onPress={handleSignup} disabled={loading}>
-                      <LinearGradient 
-                        colors={[theme.tint, '#2563EB']} 
-                        style={styles.btnGradient}
-                      >
-                         {loading ? (
-                           <ActivityIndicator color="#FFF" />
-                         ) : (
-                           <Text style={styles.btnText}>Send Code</Text>
-                         )}
-                      </LinearGradient>
-                   </TouchableOpacity>
-                 </>
-               ) : (
-                 <Animated.View entering={SlideInRight}>
-                    <View style={styles.inputContainer}>
-                       <Text style={[styles.label, { color: theme.text }]}>Verification Code</Text>
-                       <View style={[styles.inputWrapper, { backgroundColor: theme.card, borderColor: theme.border }]}>
-                          <Ionicons name="shield-checkmark-outline" size={20} color={theme.tint} />
-                          <TextInput
-                             style={[styles.input, { color: theme.text, letterSpacing: 4, textAlign: 'center' }]}
-                             placeholder="123456"
-                             placeholderTextColor={theme.icon}
-                             value={otp}
-                             onChangeText={setOtp}
-                             maxLength={6}
-                             keyboardType="number-pad"
-                          />
-                       </View>
+            <Animated.View entering={FadeInDown.delay(200)} style={styles.formContainer}>
+               <BlurView intensity={30} tint="dark" style={styles.glassCard}>
+                  {error ? (
+                    <View style={styles.errorBanner}>
+                       <Text style={styles.errorText}>{error}</Text>
                     </View>
+                  ) : null}
 
-                    <TouchableOpacity style={styles.signupBtn} onPress={handleVerifyOTP} disabled={loading}>
-                       <LinearGradient 
-                         colors={[theme.tint, '#2563EB']} 
-                         style={styles.btnGradient}
-                       >
-                          {loading ? (
-                            <ActivityIndicator color="#FFF" />
-                          ) : (
-                            <Text style={styles.btnText}>Verify Account</Text>
-                          )}
-                       </LinearGradient>
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity 
-                      style={styles.resendBtn} 
-                      onPress={handleSignup}
-                      disabled={loading}
-                    >
-                       <Text style={[styles.resendText, { color: theme.icon }]}>Didn't receive? Resend Code</Text>
-                    </TouchableOpacity>
-                 </Animated.View>
-               )}
+                  <View style={styles.inputStack}>
+                     {step === 1 ? (
+                       <>
+                         <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Full Name</Text>
+                            <View style={styles.inputWrapper}>
+                               <Ionicons name="person" size={20} color="rgba(255,255,255,0.4)" />
+                               <TextInput
+                                  style={styles.input}
+                                  placeholder="John Doe"
+                                  placeholderTextColor="rgba(255,255,255,0.3)"
+                                  value={name}
+                                  onChangeText={setName}
+                               />
+                            </View>
+                         </View>
+
+                         <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Email Address</Text>
+                            <View style={styles.inputWrapper}>
+                               <Ionicons name="mail" size={20} color="rgba(255,255,255,0.4)" />
+                               <TextInput
+                                  style={styles.input}
+                                  placeholder="athlete@gymx.com"
+                                  placeholderTextColor="rgba(255,255,255,0.3)"
+                                  value={email}
+                                  onChangeText={setEmail}
+                                  autoCapitalize="none"
+                                  keyboardType="email-address"
+                               />
+                            </View>
+                         </View>
+
+                         <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Password</Text>
+                            <View style={styles.inputWrapper}>
+                               <Ionicons name="lock-closed" size={20} color="rgba(255,255,255,0.4)" />
+                               <TextInput
+                                  style={styles.input}
+                                  placeholder="••••••••"
+                                  placeholderTextColor="rgba(255,255,255,0.3)"
+                                  secureTextEntry
+                                  value={password}
+                                  onChangeText={setPassword}
+                               />
+                            </View>
+                         </View>
+
+                         <TouchableOpacity style={styles.signupBtn} onPress={handleSignup} disabled={loading}>
+                            <LinearGradient colors={['#3B82F6', '#2563EB']} style={styles.btnGradient}>
+                               {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.btnText}>Join GymX</Text>}
+                            </LinearGradient>
+                         </TouchableOpacity>
+                       </>
+                     ) : (
+                       <Animated.View entering={SlideInRight}>
+                          <View style={styles.inputGroup}>
+                             <Text style={styles.label}>Verification Code</Text>
+                             <View style={styles.inputWrapper}>
+                                <Ionicons name="shield-checkmark" size={20} color="#3B82F6" />
+                                <TextInput
+                                   style={[styles.input, { letterSpacing: 6, fontSize: 24, textAlign: 'center' }]}
+                                   placeholder="123456"
+                                   placeholderTextColor="rgba(255,255,255,0.2)"
+                                   value={otp}
+                                   onChangeText={setOtp}
+                                   maxLength={6}
+                                   keyboardType="number-pad"
+                                />
+                             </View>
+                          </View>
+
+                          <TouchableOpacity style={styles.signupBtn} onPress={handleVerifyOTP} disabled={loading}>
+                             <LinearGradient colors={['#3B82F6', '#2563EB']} style={styles.btnGradient}>
+                                {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.btnText}>Verify & Continue</Text>}
+                             </LinearGradient>
+                          </TouchableOpacity>
+
+                          <TouchableOpacity style={styles.resendBtn} onPress={handleSignup} disabled={loading}>
+                             <Text style={styles.resendText}>Didn't get code? Resend</Text>
+                          </TouchableOpacity>
+                       </Animated.View>
+                     )}
+                  </View>
+               </BlurView>
+            </Animated.View>
+
+            <Animated.View entering={FadeInDown.delay(600)} style={styles.footer}>
+               <Text style={styles.footerText}>Already part of GymX?</Text>
+               <TouchableOpacity onPress={() => router.push('/login')}>
+                  <Text style={styles.signupText}>Login</Text>
+               </TouchableOpacity>
             </Animated.View>
 
           </ScrollView>
@@ -209,38 +208,29 @@ export default function SignupScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  backgroundImage: { ...StyleSheet.absoluteFillObject },
   safeArea: { flex: 1 },
-  neonGlow: { 
-    position: 'absolute', top: -100, right: -100, 
-    width: 300, height: 300, borderRadius: 150, 
-    backgroundColor: 'rgba(59, 130, 246, 0.05)', 
-    filter: 'blur(100px)' 
-  },
-  scrollContent: { paddingHorizontal: 24, paddingBottom: 40 },
-  backBtn: { marginTop: 20, marginBottom: 10 },
-  header: { marginBottom: 40, alignItems: 'center' },
-  logo: { width: 100, height: 100, marginBottom: 20 },
-  title: { fontSize: 36, fontWeight: '900', letterSpacing: -1, textAlign: 'center' },
-  subtitle: { fontSize: 16, fontWeight: '600', marginTop: 8, textAlign: 'center' },
-  form: {},
-  errorBanner: { 
-    backgroundColor: 'rgba(239, 68, 68, 0.1)', paddingVertical: 12, 
-    paddingHorizontal: 16, borderRadius: 12, marginBottom: 20,
-    borderWidth: 1, borderColor: 'rgba(239, 68, 68, 0.2)'
-  },
-  errorText: { color: '#EF4444', fontSize: 14, fontWeight: '700' },
-  inputContainer: { marginBottom: 20 },
-  label: { fontWeight: '800', marginBottom: 8, marginLeft: 4 },
-  inputWrapper: { 
-    flexDirection: 'row', alignItems: 'center', 
-    borderWidth: 1, 
-    borderRadius: 18, 
-    paddingHorizontal: 16, height: 60 
-  },
-  input: { flex: 1, marginLeft: 12, fontSize: 18, fontWeight: '800' },
-  signupBtn: { height: 62, borderRadius: 20, overflow: 'hidden', marginTop: 10 },
+  scrollContent: { paddingHorizontal: 20, paddingBottom: 40, paddingTop: 60 },
+  header: { marginBottom: 30, alignItems: 'center' },
+  backBtn: { position: 'absolute', left: 0, top: -40, width: 44, height: 44, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.1)', alignItems: 'center', justifyContent: 'center' },
+  logo: { width: 80, height: 80, marginBottom: 15 },
+  title: { fontSize: 32, fontWeight: '900', color: '#FFF', letterSpacing: -1 },
+  subtitle: { fontSize: 14, fontWeight: '600', color: 'rgba(255,255,255,0.5)', marginTop: 6, textAlign: 'center' },
+  formContainer: { borderRadius: 32, overflow: 'hidden' },
+  glassCard: { padding: 24, borderRadius: 32, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
+  errorBanner: { backgroundColor: 'rgba(239, 68, 68, 0.15)', padding: 12, borderRadius: 12, marginBottom: 20, borderWidth: 1, borderColor: 'rgba(239, 68, 68, 0.3)' },
+  errorText: { color: '#F87171', fontSize: 13, fontWeight: '700', textAlign: 'center' },
+  inputStack: { gap: 16 },
+  inputGroup: {},
+  label: { color: 'rgba(255,255,255,0.8)', fontSize: 12, fontWeight: '800', marginBottom: 8, marginLeft: 4 },
+  inputWrapper: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 18, height: 58, paddingHorizontal: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
+  input: { flex: 1, fontSize: 16, color: '#FFF', fontWeight: '700', marginLeft: 10 },
+  signupBtn: { width: 220, height: 50, borderRadius: 25, overflow: 'hidden', marginTop: 10, alignSelf: 'center' },
   btnGradient: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   btnText: { color: '#FFF', fontSize: 18, fontWeight: '900' },
-  resendBtn: { marginTop: 24, alignSelf: 'center' },
-  resendText: { fontSize: 14, fontWeight: '700' }
+  resendBtn: { alignSelf: 'center', marginTop: 15 },
+  resendText: { color: 'rgba(255,255,255,0.4)', fontSize: 13, fontWeight: '700' },
+  footer: { flexDirection: 'row', justifyContent: 'center', marginTop: 30, gap: 8 },
+  footerText: { color: 'rgba(255,255,255,0.6)', fontSize: 15, fontWeight: '600' },
+  signupText: { color: '#3B82F6', fontSize: 15, fontWeight: '800' }
 });

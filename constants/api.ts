@@ -7,8 +7,8 @@
  * 3. Make sure the phone has internet access.
  */
 
-// If you have a static ngrok domain, put it here.
-export const BASE_API_URL = 'https://pseudochemical-lourie-contractive.ngrok-free.dev/api';
+// Production URL on Render
+export const BASE_API_URL = 'https://gymx-r5p1.onrender.com/api';
 
 export const API_ENDPOINTS = {
   AUTH: `${BASE_API_URL}/auth`,

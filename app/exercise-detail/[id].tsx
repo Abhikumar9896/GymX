@@ -295,10 +295,12 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   startBtn: {
-    height: 48,
-    borderRadius: 12,
+    width: 220,
+    height: 50,
+    borderRadius: 25,
     overflow: 'hidden',
-    marginHorizontal: 40,
+    alignSelf: 'center',
+    marginVertical: 20,
   },
   btnGradient: {
     flex: 1,

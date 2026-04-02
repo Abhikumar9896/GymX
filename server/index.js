@@ -4,6 +4,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 
+const { errorHandler } = require('./middleware/errorMiddleware');
+
 dotenv.config();
 
 const app = express();
@@ -28,6 +30,9 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://abhishek:GymX123@gymap
 mongoose.connect(MONGO_URI)
   .then(() => console.log('Connected to MongoDB Atlas'))
   .catch((err) => console.log('MongoDB connection error:', err));
+
+// Global Error Handler (Should be last)
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, '0.0.0.0', () => {

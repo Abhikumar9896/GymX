@@ -195,10 +195,11 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   modalBtn: {
-    width: '100%',
-    height: 60,
-    borderRadius: 20,
+    width: 220,
+    height: 50,
+    borderRadius: 25,
     overflow: 'hidden',
+    alignSelf: 'center',
   },
   modalBtnGradient: {
     flex: 1,

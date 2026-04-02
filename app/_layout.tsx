@@ -28,6 +28,8 @@ const preloadImages = async () => {
 import { useGymXStore } from '@/store/useStore';
 import { useRouter, useSegments } from 'expo-router';
 
+import BackgroundService from '@/services/BackgroundService';
+
 export default function RootLayout() {
   const { theme, colorScheme, isDark } = useAppTheme();
   const isLoggedIn = useGymXStore((state) => state.isLoggedIn);
@@ -36,6 +38,8 @@ export default function RootLayout() {
 
   useEffect(() => {
     preloadImages();
+    // Register background sync for step counts (works even when app is killed)
+    BackgroundService.register();
   }, []);
 
   useEffect(() => {
@@ -61,6 +65,7 @@ export default function RootLayout() {
         <Stack.Screen name="exercise-detail/[id]" options={{ headerShown: false }} />
         <Stack.Screen name="bmi" options={{ headerShown: false }} />
         <Stack.Screen name="active-workout" options={{ headerShown: false }} />
+        <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Details' }} />
       </Stack>
 

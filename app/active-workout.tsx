@@ -376,10 +376,12 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   addSetBtn: {
-    height: 48,
-    borderRadius: 12,
+    width: 200,
+    height: 46,
+    borderRadius: 23,
     overflow: 'hidden',
-    marginHorizontal: 30,
+    alignSelf: 'center',
+    marginTop: 10,
   },
   addSetGradient: {
     flex: 1,

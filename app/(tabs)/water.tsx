@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
   inputStack: { flexDirection: 'row', alignItems: 'center', marginTop: 20, marginBottom: 40 },
   goalInput: { fontSize: 60, fontWeight: '900', padding: 0 },
   goalUnit: { fontSize: 26, fontWeight: '900', marginLeft: 15 },
-  saveBtn: { width: '90%', height: 60, borderRadius: 20, overflow: 'hidden' },
+  saveBtn: { width: 220, height: 50, borderRadius: 25, overflow: 'hidden', alignSelf: 'center', marginTop: 10 },
   saveGrad: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   saveTxt: { color: '#FFF', fontSize: 18, fontWeight: '900' }
 });

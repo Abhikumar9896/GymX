@@ -1,83 +1,51 @@
-import { useState, useEffect } from 'react';
-import { Platform } from 'react-native';
-import AppleHealthKit, { HealthKitPermissions } from 'react-native-health';
-import { initialize, requestPermission, readRecords } from 'react-native-health-connect';
+import { useState, useEffect, useCallback } from 'react';
+import HealthService from '@/services/HealthService';
 
 export const useDailySteps = () => {
   const [steps, setSteps] = useState(0);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchSteps = useCallback(async () => {
+    try {
+      const todaySteps = await HealthService.getTodaySteps();
+      setSteps(todaySteps);
+    } catch (e: any) {
+      console.warn('[useDailySteps] Update failed:', e);
+    }
+  }, []);
+
   useEffect(() => {
-    const fetchHealthData = async () => {
+    let isMounted = true;
+    let updateInterval: NodeJS.Timeout | null = null;
+
+    const setup = async () => {
       try {
-        if (Platform.OS === 'ios') {
-          const permissions: HealthKitPermissions = {
-            permissions: {
-              read: [AppleHealthKit.Constants.Permissions.Steps],
-              write: [],
-            },
-          };
-
-          AppleHealthKit.initHealthKit(permissions, (err) => {
-            if (err) {
-              setError('Error initializing Apple Health.');
-              return;
-            }
-            setIsAuthorized(true);
-
-            // Fetch today's steps
-            const options = {
-              date: new Date().toISOString(), // Requires ISO string
-              includeManuallyAdded: true,
-            };
-
-            AppleHealthKit.getStepCount(options, (fetchErr, results) => {
-              if (fetchErr) {
-                setError('Error fetching steps.');
-                return;
-              }
-              setSteps(results.value);
-            });
-          });
-
-        } else if (Platform.OS === 'android') {
-          // Initialize Health Connect
-          const isInitialized = await initialize();
-          if (!isInitialized) {
-            setError('Health Connect is not available on this device.');
-            return;
-          }
-
-          // Request Permissions
-          await requestPermission([
-            { accessType: 'read', recordType: 'Steps' },
-          ]);
-          setIsAuthorized(true);
-
-          // Get Today's Date Range
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
+        const authorized = await HealthService.authorize();
+        if (!isMounted) return;
+        
+        setIsAuthorized(authorized);
+        if (authorized) {
+          await fetchSteps();
           
-          const result = await readRecords('Steps', {
-            timeRangeFilter: {
-              operator: 'between',
-              startTime: today.toISOString(),
-              endTime: new Date().toISOString(),
-            },
-          });
-
-          // Calculate total
-          const totalSteps = result.records.reduce((sum, record) => sum + record.count, 0);
-          setSteps(totalSteps);
+          // Professional: Set interval to update steps automatically every 30 seconds
+          // so the app feels "live" and modern.
+          updateInterval = setInterval(fetchSteps, 30000);
+        } else {
+          setError('Health permissions not granted.');
         }
       } catch (e: any) {
-        setError(e.message || 'An error occurred while tracking steps.');
+        if (isMounted) setError(e.message || 'Error tracking steps');
       }
     };
 
-    fetchHealthData();
-  }, []);
+    setup();
 
-  return { steps, isAuthorized, error };
+    return () => { 
+      isMounted = false; 
+      if (updateInterval) clearInterval(updateInterval);
+    };
+  }, [fetchSteps]);
+
+  return { steps, isAuthorized, error, refresh: fetchSteps };
 };

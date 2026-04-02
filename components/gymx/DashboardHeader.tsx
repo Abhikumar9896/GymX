@@ -31,7 +31,7 @@ export const DashboardHeader = () => {
       
       <View style={styles.rightSection}>
         <TouchableOpacity 
-          style={[styles.notificationBtn, { backgroundColor: theme.card, borderColor: theme.border }]}
+          style={styles.notificationBtn}
           onPress={async () => {
             try {
               const Constants = require('expo-constants').default || require('expo-constants');
@@ -61,7 +61,7 @@ export const DashboardHeader = () => {
             }
           }}
         >
-           <Ionicons name="notifications-outline" size={24} color={theme.text} />
+           <Ionicons name="notifications-outline" size={20} color={theme.text} />
         </TouchableOpacity>
       </View>
 
@@ -121,13 +121,8 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   notificationBtn: {
-     width: 44,
-     height: 44,
-     borderRadius: 22,
-     backgroundColor: 'rgba(30, 41, 59, 0.5)',
+     padding: 8,
      alignItems: 'center',
      justifyContent: 'center',
-     borderWidth: 1,
-     borderColor: 'rgba(255, 255, 255, 0.05)',
   }
 });

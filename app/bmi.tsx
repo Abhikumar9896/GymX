@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   inputLabel: { fontSize: 13, fontWeight: '700', marginBottom: 6 },
   textInput: { fontSize: 24, fontWeight: '800' },
   divider: { height: 1, marginHorizontal: 24 },
-  calcBtn: { height: 64, marginTop: 20, borderRadius: 20, overflow: 'hidden' },
+  calcBtn: { width: 220, height: 50, borderRadius: 25, overflow: 'hidden', alignSelf: 'center', marginTop: 10 },
   calcGradient: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
   calcText: { color: '#FFF', fontSize: 18, fontWeight: '900' },
   resultContainer: { paddingHorizontal: 24, marginBottom: 40 },

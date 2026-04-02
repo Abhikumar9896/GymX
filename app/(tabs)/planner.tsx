@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
   gridBlock: { width: (width - 50) / 2, paddingVertical: 20, borderRadius: 24, borderWidth: 1, alignItems: 'center', position: 'relative' },
   gridLabel: { fontSize: 14, fontWeight: '800', marginTop: 8 },
   dot: { position: 'absolute', top: 12, right: 12, width: 6, height: 6, borderRadius: 3 },
-  confirmBtn: { height: 60, borderRadius: 20, overflow: 'hidden' },
+  confirmBtn: { width: 220, height: 50, borderRadius: 25, overflow: 'hidden', alignSelf: 'center', marginTop: 10 },
   confirmGrad: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   confirmBtnText: { color: '#FFF', fontSize: 17, fontWeight: '900' }
 });

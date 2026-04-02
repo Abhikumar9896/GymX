@@ -80,7 +80,6 @@ export default function ForgotPasswordScreen() {
             </TouchableOpacity>
 
             <Animated.View entering={FadeInUp.delay(100)} style={styles.header}>
-               <Image source={require('@/assets/images/logo.png')} style={styles.logo} resizeMode="contain" />
                <Text style={styles.title}>{step === 1 ? 'Recovery' : 'Set New Password'}</Text>
                <Text style={styles.subtitle}>
                  {step === 1 ? "Enter your email for the recovery code" : `Enter the 6-digit code sent to ${email}`}
@@ -227,7 +226,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16, height: 60 
   },
   input: { flex: 1, color: '#FFF', marginLeft: 12, fontSize: 18, fontWeight: '800' },
-  primaryBtn: { height: 62, borderRadius: 20, overflow: 'hidden', marginTop: 10 },
+  primaryBtn: { width: 220, height: 50, borderRadius: 25, overflow: 'hidden', marginTop: 10, alignSelf: 'center' },
   btnGradient: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   btnText: { color: '#FFF', fontSize: 18, fontWeight: '900' },
   resendBtn: { marginTop: 24, alignSelf: 'center' },
