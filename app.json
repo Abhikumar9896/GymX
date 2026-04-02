@@ -31,9 +31,7 @@
         "WAKE_LOCK",
         "POST_NOTIFICATIONS",
         "READ_HEALTH_DATA",
-        "WRITE_HEALTH_DATA",
-        "android.permission.RECEIVE_BOOT_COMPLETED",
-        "android.permission.WAKE_LOCK"
+        "WRITE_HEALTH_DATA"
       ],
       "package": "com.gymx.athlete",
       "googleServicesFile": "./google-services.json"
