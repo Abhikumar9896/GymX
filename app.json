@@ -13,7 +13,10 @@
       "infoPlist": {
         "NSHealthShareUsageDescription": "GymX needs to access your step count to track your daily physical activity.",
         "NSHealthUpdateUsageDescription": "GymX needs permission to update your health data.",
-        "UIBackgroundModes": ["fetch", "remote-notification"]
+        "UIBackgroundModes": [
+          "fetch",
+          "remote-notification"
+        ]
       }
     },
     "android": {
@@ -28,7 +31,9 @@
         "WAKE_LOCK",
         "POST_NOTIFICATIONS",
         "READ_HEALTH_DATA",
-        "WRITE_HEALTH_DATA"
+        "WRITE_HEALTH_DATA",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.WAKE_LOCK"
       ],
       "package": "com.gymx.athlete",
       "googleServicesFile": "./google-services.json"
@@ -62,7 +67,9 @@
           "android": {
             "compileSdkVersion": 34,
             "targetSdkVersion": 34,
-            "extraMavenRepos": ["https://maven.google.com"]
+            "extraMavenRepos": [
+              "https://maven.google.com"
+            ]
           }
         }
       ]
@@ -71,6 +78,10 @@
       "typedRoutes": true
     },
     "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "2af180fc-f473-4bf5-9ce7-8eaf9d69ad5b"
+      }
     }
   }
 }
