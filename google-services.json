@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "290985812109",
+    "project_id": "gymx-135a8",
+    "storage_bucket": "gymx-135a8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290985812109:android:4705aa06fa9abeb667c2c4",
+        "android_client_info": {
+          "package_name": "com.gymx.athlete"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnZglgMwu_qWL4dy3VCJmf4ENyMsS1jMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
