@@ -24,13 +24,21 @@ class HealthService {
       }
 
       if (this.isAndroid) {
-        const isInitialized = await initialize();
-        if (!isInitialized) return false;
-        
-        await requestPermission([
-          { accessType: 'read', recordType: 'Steps' },
-        ]);
-        return true;
+        try {
+          const isInitialized = await initialize();
+          if (!isInitialized) {
+            console.warn('[HealthService] Health Connect not initialized. It may not be installed.');
+            return false;
+          }
+          
+          await requestPermission([
+            { accessType: 'read', recordType: 'Steps' },
+          ]);
+          return true;
+        } catch (e) {
+          console.error('[HealthService] Android Init Error:', e);
+          return false;
+        }
       }
 
       return false;

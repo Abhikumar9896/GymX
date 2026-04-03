@@ -41,7 +41,11 @@ export default function DashboardScreen() {
   const todayFocus = weeklyPlan[today] || [];
   const focusText = todayFocus.length > 0 ? todayFocus.join(' & ') : 'Rest Day';
 
-  const renderItem = ({ item }: { item: any }) => <CategoryCard item={item} />;
+  const renderItem = ({ item }: { item: any }) => (
+    <Animated.View entering={FadeInUp.delay(500).duration(800)}>
+      <CategoryCard item={item} />
+    </Animated.View>
+  );
 
   const ListHeader = () => (
     <View style={styles.headerSpacer}>

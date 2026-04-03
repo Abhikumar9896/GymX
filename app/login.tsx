@@ -35,10 +35,14 @@ export default function LoginScreen() {
     setError('');
 
     try {
-      const response = await axios.post(API_ENDPOINTS.LOGIN, { email, password });
+      const response = await axios.post(API_ENDPOINTS.LOGIN, { email, password }, { timeout: 60000 });
       const { token, user } = response.data;
-      setAuth(user, token);
-      router.replace('/(tabs)');
+      if (token && user) {
+        setAuth(user, token);
+        router.replace('/(tabs)');
+      } else {
+        throw new Error('Invalid server response');
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed. Check server/internet.');
     } finally {
