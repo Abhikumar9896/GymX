@@ -19,7 +19,7 @@ export default function WelcomeScreen() {
       {/* Cinematic Background */}
       <Animated.Image 
         entering={FadeIn.duration(1500)}
-        source={require('../assets/images/welcome-bg.png')}
+        source={require('../assets/images/welcomebg.png')}
         style={styles.backgroundImage}
         resizeMode="cover"
       />
