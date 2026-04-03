@@ -76,7 +76,7 @@ export default function SignupScreen() {
       {/* Immersive Auth Background */}
       <Animated.Image 
         entering={FadeIn.duration(1000)}
-        source={require('../assets/images/authbg.png')}
+        source={require('../assets/images/authbg.jpg')}
         style={[styles.backgroundImage, { width, height }]}
         resizeMode="cover"
       />
