@@ -65,6 +65,7 @@
           "android": {
             "compileSdkVersion": 36,
             "targetSdkVersion": 36,
+            "minSdkVersion": 26,
             "extraMavenRepos": [
               "https://maven.google.com"
             ]
