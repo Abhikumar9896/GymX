@@ -1,7 +1,8 @@
 import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
+import { Platform } from 'react-native';
 import HealthService from './HealthService';
-import { useGymXStore } from '@/store/useStore';
+
 
 const BACKGROUND_FETCH_TASK = 'BACKGROUND_STEP_SYNC';
 
@@ -33,24 +34,34 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
 // 2. Class for registration
 class BackgroundService {
   async register() {
+    // Background fetch on real Android devices can crash if permissions/services are not ready
+    // Wrap everything in try-catch so it NEVER crashes the app
     try {
+      // Small delay to ensure app is fully initialized before registering background tasks
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
       const isRegistered = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK);
       if (!isRegistered) {
         await BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-          minimumInterval: 15 * 60, // 15 mins (minimum for iOS/Android)
-          stopOnTerminate: false, // Continue even after kill
-          startOnBoot: true, // Resume after phone restart
+          minimumInterval: 15 * 60, // 15 minutes
+          stopOnTerminate: false,
+          startOnBoot: true,
         });
         console.log('[BackgroundService] Registered successfully');
       }
     } catch (error) {
-      console.error('[BackgroundService] Error during registration:', error);
+      // Non-fatal: background sync won't run but the app won't crash
+      console.warn('[BackgroundService] Registration failed (non-fatal):', error);
     }
   }
 
   async unregister() {
-    if (await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK)) {
-      await BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
+    try {
+      if (await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK)) {
+        await BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
+      }
+    } catch (error) {
+      console.warn('[BackgroundService] Unregister failed (non-fatal):', error);
     }
   }
 }
